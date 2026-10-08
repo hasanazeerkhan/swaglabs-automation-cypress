@@ -1,163 +1,243 @@
 # Swag Labs Automation with Cypress
 
-This repository contains automated tests for the Swag Labs application using Cypress. The goal is to ensure the functionality and reliability of the application through automated end-to-end testing.
+End-to-end test automation for the [Swag Labs](https://www.saucedemo.com/) web application using **Cypress and JavaScript**.
 
-## Table of Contents
+The project focuses on automating core authentication and navigation workflows while maintaining reusable test data, centralized selectors, Cypress support configuration, and a clean E2E test structure.
 
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running Tests](#running-tests)
-- [Folder Structure](#folder-structure)
-- [Custom Commands](#custom-commands)
-- [Test Cases Covered](#test-cases-covered)
-- [Contributing](#contributing)
-- [License](#license)
+## Tech Stack
 
-## Introduction
+| Technology | Purpose |
+|---|---|
+| Cypress | End-to-end test automation |
+| JavaScript | Test implementation |
+| Node.js | Runtime and package management |
+| npm | Dependency management |
 
-Swag Labs is a web application that simulates a shopping experience. This project automates various features of the Swag Labs application to validate user flows and ensure seamless functionality.
+## Project Structure
+
+```text
+swaglabs-automation-cypress/
+│
+├── cypress/
+│   ├── e2e/
+│   │   └── test.cy.js
+│   │
+│   ├── fixtures/
+│   │   └── example.json
+│   │
+│   └── support/
+│       ├── commands.js
+│       ├── data.js
+│       └── e2e.js
+│
+├── cypress.config.js
+├── package.json
+├── package-lock.json
+└── README.md
+```
+
+## Framework Structure
+
+### E2E Tests
+
+The `cypress/e2e` directory contains the automated test specifications.
+
+The current suite covers:
+
+- Login using supported Swag Labs users
+- Navigation to the inventory page after authentication
+- Opening the application menu
+- Logout validation
+- Verification of the application URL after logout
+
+### Test Data and Selectors
+
+The `cypress/support/data.js` file centralizes:
+
+- Valid user credentials
+- Invalid test credentials
+- Application URLs
+- Login page selectors
+- Navigation menu selectors
+- Shopping cart selectors
+- Checkout selectors
+- Product removal selectors
+- Expected validation messages
+
+Keeping selectors and test data outside the test specification makes the test code easier to maintain when the application changes.
+
+### Cypress Support
+
+The `cypress/support` directory contains shared Cypress configuration and reusable support files.
+
+`commands.js` provides the standard location for custom Cypress commands that can be introduced as the suite grows.
+
+`e2e.js` contains the global E2E support configuration.
+
+## Automated Scenarios
+
+### Authentication
+
+The current automation validates login using the supported Swag Labs user accounts:
+
+- `standard_user`
+- `locked_out_user`
+- `problem_user`
+- `performance_glitch_user`
+- `error_user`
+- `visual_user`
+
+The test iterates through the configured users, performs authentication, validates successful navigation to the inventory page, and then verifies logout.
+
+### Navigation
+
+The test suite also validates:
+
+- Opening the application menu
+- Logging out
+- Returning to the login page after logout
+
+The repository also contains centralized selectors and test data for additional application areas, including:
+
+- Application menu
+- Shopping cart
+- Checkout
+- Product removal
+- Filtering
+
+These provide the foundation for extending the E2E coverage.
+
+## Cypress Configuration
+
+The Cypress configuration is defined in `cypress.config.js`.
+
+Current configuration includes:
+
+- Base URL: `https://www.saucedemo.com/`
+- Viewport: `1920 × 1080`
+- E2E test configuration
+
+Using a configured `baseUrl` allows tests to use relative navigation such as:
+
+```javascript
+cy.visit('/')
+```
+
+instead of hard-coding the application URL in every test.
 
 ## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
+Make sure the following are installed:
 
-- Node.js (version 14.x or later)
-- npm (Node package manager)
+- Node.js
+- npm
+
+Check the installed versions:
+
+```bash
+node --version
+npm --version
+```
 
 ## Installation
 
-1. Clone the repository:
+Clone the repository:
 
-   ```bash
-   git clone https://github.com/hasanazeerkhan/swaglabs-automation-cypress.git
-   cd swaglabs-automation-cypress
-   ```
+```bash
+git clone https://github.com/hasanazeerkhan/swaglabs-automation-cypress.git
+```
 
-2. Install the required dependencies:
+Navigate to the project:
 
-   ```bash
-   npm install
-   ```
+```bash
+cd swaglabs-automation-cypress
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
 
 ## Running Tests
 
-To run the tests, use the following command:
+### Cypress Interactive Mode
+
+Open the Cypress Test Runner:
 
 ```bash
 npx cypress open
 ```
 
-This will open the Cypress Test Runner. You can then select the test files you want to run.
+Select **E2E Testing**, choose a browser, and execute the available test specification.
 
-For headless execution, you can run:
+### Headless Execution
+
+Run the E2E suite from the command line:
 
 ```bash
 npx cypress run
 ```
 
-## Folder Structure
+### Run a Specific Test File
 
-The project follows a standard Cypress folder structure:
-
-```
-swaglabs-automation-cypress/
-├── cypress/
-│   ├── fixtures/        # Test data files
-│   ├── integration/     # Test specifications
-│   ├── support/         # Custom commands and global configurations
-├── cypress.json         # Cypress configuration file
-└── package.json         # Project dependencies and scripts
+```bash
+npx cypress run --spec "cypress/e2e/test.cy.js"
 ```
 
-## Custom Commands
+## Test Design Approach
 
-Custom commands are defined in the `cypress/support/commands.js` file. They help to simplify repetitive tasks within tests. Feel free to add your own custom commands as needed.
+The project follows a simple separation of responsibilities:
 
-## Test Cases Covered
+```text
+Test Specification
+        │
+        ▼
+   Cypress Commands
+        │
+        ▼
+Test Data & Selectors
+        │
+        ▼
+   Swag Labs Application
+```
 
-# Test Case: Login Page
+The test specification focuses on the user workflow, while selectors, URLs, credentials, and other reusable values are maintained separately.
 
-## 1. URL of Login Page
-- **Test Step**: Navigate to the login page.
-- **Expected Result**: The URL should match `https://example.com/login`.
+## Key Automation Practices
 
-## 2. Title of the Login Page
-- **Test Step**: Check the title of the login page.
-- **Expected Result**: The title should be "User Login".
+- End-to-end browser automation using Cypress
+- Centralized selectors
+- Centralized test data
+- Data-driven login validation
+- Reusable Cypress support structure
+- Configurable application base URL
+- Assertions for navigation and authentication state
+- Headless and interactive test execution
 
-## 3. Accessing the Site with Correct Credentials
-- **Test Step**: Enter valid username and password and submit.
-- **Expected Result**: User should be redirected to the dashboard, and a welcome message should be displayed.
+## Application Under Test
 
-## 4. Accessing the Site with Incorrect Credentials
-- **Test Step**: Enter invalid username and/or password and submit.
-- **Expected Result**: An error message "Invalid username or password" should be displayed, and the URL should remain as `https://example.com/login`.
+**Swag Labs**
 
----
+https://www.saucedemo.com/
 
-# Test Case: Open Menu
+## Future Improvements
 
-## 1. All Menu Items
-- **Test Step**: Open the menu.
-- **Expected Result**: All menu items should be visible, including "About", "Logout", "Reset App State", and "Close".
+Potential extensions to the current suite include:
 
-## 2. Verify Clicking About Will Open a Page
-- **Test Step**: Click on the "About" menu item.
-- **Expected Result**: A new page containing information about the application should open.
+- Product filtering validation
+- Shopping cart workflows
+- Checkout flow validation
+- Negative login scenarios
+- Custom Cypress commands for authentication
+- Screenshot and video artifacts for failures
+- CI execution using GitHub Actions
+- Improved test reporting
+- Expanded fixture-based test data
 
-## 3. Verify Logging Out
-- **Test Step**: Click on the "Logout" menu item.
-- **Expected Result**: The user should be logged out and redirected to the login page.
+## Author
 
-## 4. Verify Resetting App State
-- **Test Step**: Click on "Reset App State".
-- **Expected Result**: All added options should be removed, and the app should return to its default state.
+**Hasan**
 
-## 5. Verify Closing the Open Item
-- **Test Step**: Click on the "Close" button in the left pane.
-- **Expected Result**: The left pane should close successfully.
-
----
-
-# Test Case: Filter
-
-## 1. Verify Filtering with All Three Options
-- **Test Step**: Apply each of the three filter options sequentially.
-- **Expected Result**: The displayed items should update according to the selected filter criteria.
-
----
-
-# Test Case: Add to Cart
-
-## 1. Verify Removing from the Cart
-- **Test Step**: Add an item to the cart and then remove it.
-- **Expected Result**: The cart should be empty after removal.
-
-## 2. Verify Continue Shopping
-- **Test Step**: Click on the "Continue Shopping" button after adding an item to the cart.
-- **Expected Result**: User should be redirected back to the product listing page.
-
-## 3. Verify Checkout
-- **Test Step**: Click on the "Checkout" button in the cart.
-- **Expected Result**: The user should be taken to the checkout page.
-
-## 4. Verify Adding Information on Checkout
-- **Test Step**: Enter required information (e.g., shipping address, payment details) on the checkout page.
-- **Expected Result**: All information should be accepted without errors.
-
-## 5. Verify Cancelling Checkout
-- **Test Step**: Click on the "Cancel" button on the checkout page.
-- **Expected Result**: The user should be returned to the cart page with no changes made.
-
-
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or new features, please open an issue or submit a pull request.
-
-1. Fork the repository.
-2. Create a new branch `git checkout -b feature/YourFeature`
-3. Make your changes.
-4. Commit your changes `git commit -m 'Add some feature'`
-5. Push to the branch `git push origin feature/YourFeature`
-6. Open a pull request.
+GitHub:  
+https://github.com/hasanazeerkhan
